@@ -1,0 +1,1240 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Arco & Alma — Violoncelo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:         #1C1510;
+  --bg2:        #231A13;
+  --bg3:        #2A1F16;
+  --panel:      #271D15;
+  --gold:       #C9A84C;
+  --gold2:      #E8C97A;
+  --gold-dim:   #7A6030;
+  --gold-pale:  rgba(201,168,76,0.08);
+  --gold-glow:  rgba(201,168,76,0.18);
+  --ivory:      #F2EAD8;
+  --ivory2:     #D4C9A8;
+  --ivory3:     #8A7D68;
+  --bordeaux:   #6B1E2E;
+  --bord2:      #8B2E40;
+  --bord-pale:  rgba(107,30,46,0.15);
+  --green:      #2E6B3E;
+  --green2:     #7BC49A;
+  --green-pale: rgba(46,107,62,0.12);
+  --blue:       #2E4F6B;
+  --blue2:      #7BAFC4;
+  --blue-pale:  rgba(46,79,107,0.15);
+  --ink:        #3A2C1E;
+  --sidebar-w: 240px;
+  --header-h:  56px;
+  --radius:    3px;
+  --t:         0.25s cubic-bezier(.4,0,.2,1);
+  --font-d:    'Playfair Display', Georgia, serif;
+  --font-b:    'Cormorant Garamond', Georgia, serif;
+  --font-t:    'EB Garamond', Georgia, serif;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{height:100%;overflow:hidden;}
+body{font-family:var(--font-b);background:var(--bg);color:var(--ivory);display:flex;flex-direction:column;}
+
+/* NOISE TEXTURE */
+body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");pointer-events:none;z-index:9999;}
+
+/* ── HEADER ── */
+header{height:var(--header-h);display:flex;align-items:center;gap:1rem;padding:0 1.25rem;border-bottom:1px solid rgba(201,168,76,0.18);background:var(--bg2);flex-shrink:0;z-index:100;position:relative;}
+.logo{display:flex;align-items:center;gap:0.6rem;text-decoration:none;}
+.logo-icon{width:32px;height:32px;flex-shrink:0;}
+.logo-text{font-family:var(--font-d);font-size:1.1rem;font-weight:700;color:var(--ivory);line-height:1.1;}
+.logo-text em{color:var(--gold);font-style:italic;}
+.logo-sub{font-family:var(--font-b);font-size:0.62rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--ivory3);margin-top:1px;}
+.header-right{margin-left:auto;display:flex;align-items:center;gap:1.25rem;}
+.streak-badge{display:flex;align-items:center;gap:0.35rem;font-family:var(--font-b);font-size:0.85rem;color:var(--ivory2);}
+.streak-num{font-family:var(--font-d);font-size:1rem;color:var(--gold);}
+
+/* ── LAYOUT ── */
+.app-body{display:flex;flex:1;overflow:hidden;}
+
+/* ── SIDEBAR ── */
+aside{width:var(--sidebar-w);background:var(--bg2);border-right:1px solid rgba(201,168,76,0.12);display:flex;flex-direction:column;overflow-y:auto;flex-shrink:0;}
+.nav-group-label{font-family:var(--font-b);font-size:0.62rem;letter-spacing:0.28em;text-transform:uppercase;color:var(--ivory3);padding:1.1rem 1rem 0.35rem;}
+.nav-item{display:flex;align-items:center;gap:0.6rem;padding:0.55rem 1rem;cursor:pointer;border-left:2px solid transparent;transition:var(--t);font-family:var(--font-b);font-size:0.95rem;color:var(--ivory2);white-space:nowrap;overflow:hidden;}
+.nav-item svg{width:16px;height:16px;flex-shrink:0;opacity:0.6;}
+.nav-item:hover{background:var(--gold-pale);color:var(--ivory);border-left-color:rgba(201,168,76,0.3);}
+.nav-item.active{background:var(--gold-glow);color:var(--gold2);border-left-color:var(--gold);}
+.nav-item.active svg{opacity:1;}
+.nav-footer{margin-top:auto;padding:1rem;border-top:1px solid rgba(201,168,76,0.1);font-family:var(--font-t);font-size:0.8rem;color:var(--ivory3);}
+
+/* ── MAIN ── */
+main{flex:1;overflow-y:auto;overflow-x:hidden;background:var(--bg);}
+.page{display:none;padding:1.75rem 2rem;animation:fadeUp .3s ease;}
+.page.active{display:block;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+.page-header{margin-bottom:1.5rem;}
+.page-title{font-family:var(--font-d);font-size:clamp(1.6rem,2.5vw,2.2rem);font-weight:700;color:var(--ivory);line-height:1.1;}
+.page-title em{color:var(--gold);font-style:italic;}
+.page-sub{font-family:var(--font-b);font-size:1rem;color:var(--ivory3);margin-top:0.25rem;font-style:italic;}
+
+/* ── CARDS ── */
+.card{background:var(--bg3);border:1px solid rgba(201,168,76,0.13);padding:1.25rem;border-radius:var(--radius);margin-bottom:1rem;}
+.card:hover{border-color:rgba(201,168,76,0.25);}
+.card-title{font-family:var(--font-d);font-size:1rem;font-weight:600;color:var(--gold2);margin-bottom:0.6rem;display:flex;align-items:center;gap:0.4rem;}
+.card-body{font-family:var(--font-t);font-size:0.97rem;color:var(--ivory2);line-height:1.7;}
+.tip{background:rgba(201,168,76,0.07);border-left:2px solid var(--gold);padding:0.8rem 1rem;border-radius:0 var(--radius) var(--radius) 0;font-family:var(--font-t);font-size:0.92rem;color:var(--ivory2);line-height:1.6;margin:0.75rem 0;}
+.tip strong{color:var(--gold2);}
+
+/* ── GRID ── */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:0.75rem;}
+
+/* ── BUTTONS ── */
+.btn{font-family:var(--font-b);font-size:0.9rem;letter-spacing:0.06em;padding:0.55rem 1.4rem;border:none;border-radius:var(--radius);cursor:pointer;transition:var(--t);display:inline-flex;align-items:center;gap:0.4rem;white-space:nowrap;}
+.btn-gold{background:var(--gold);color:var(--bg);font-weight:600;}
+.btn-gold:hover{background:var(--gold2);}
+.btn-outline{background:transparent;border:1px solid var(--gold-dim);color:var(--gold);}
+.btn-outline:hover{background:var(--gold-pale);border-color:var(--gold);}
+.btn-red{background:var(--bordeaux);color:var(--ivory);}
+.btn-red:hover{background:var(--bord2);}
+.btn-sm{padding:0.35rem 0.9rem;font-size:0.82rem;}
+.btn:disabled{opacity:0.35;cursor:not-allowed;}
+.btn-row{display:flex;gap:0.6rem;flex-wrap:wrap;margin-top:0.75rem;}
+
+/* ── PROGRESS ── */
+.prog-wrap{height:3px;background:rgba(255,255,255,0.06);border-radius:2px;overflow:hidden;margin-top:0.4rem;}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--gold2));transition:width .8s cubic-bezier(.4,0,.2,1);}
+
+/* SEPARATOR */
+.sep{height:1px;background:linear-gradient(90deg,transparent,rgba(201,168,76,0.2),transparent);margin:1.25rem 0;}
+
+/* ══════════════════════════════════════
+   DASHBOARD
+══════════════════════════════════════ */
+.dash-hero{background:linear-gradient(135deg,rgba(107,30,46,0.25),rgba(28,21,16,0.9));border:1px solid rgba(201,168,76,0.16);padding:1.5rem 1.75rem;border-radius:var(--radius);margin-bottom:1.25rem;position:relative;overflow:hidden;}
+.dash-hero::after{content:'𝄞';position:absolute;right:1.5rem;top:50%;transform:translateY(-50%);font-size:7rem;color:rgba(201,168,76,0.04);pointer-events:none;font-family:serif;}
+.dash-greeting{font-family:var(--font-b);font-size:0.75rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--gold-dim);margin-bottom:0.2rem;}
+.dash-name{font-family:var(--font-d);font-size:1.8rem;font-weight:700;color:var(--ivory);}
+.dash-quote{font-family:var(--font-t);font-size:0.95rem;color:var(--ivory3);margin-top:0.3rem;font-style:italic;}
+.stat-row{display:flex;gap:1.5rem;margin-top:1.1rem;flex-wrap:wrap;}
+.stat{text-align:center;}
+.stat-n{font-family:var(--font-d);font-size:1.8rem;font-weight:700;color:var(--gold);display:block;line-height:1;}
+.stat-l{font-family:var(--font-b);font-size:0.65rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--ivory3);margin-top:2px;}
+
+.quick-actions{display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;margin-bottom:1.25rem;}
+.qa-card{background:var(--bg3);border:1px solid rgba(201,168,76,0.12);padding:1.1rem 1.25rem;border-radius:var(--radius);cursor:pointer;transition:var(--t);border-left:3px solid transparent;}
+.qa-card:hover{border-color:rgba(201,168,76,0.25);background:var(--bg2);}
+.qa-card.gold{border-left-color:var(--gold);}
+.qa-card.bordeaux{border-left-color:var(--bordeaux);}
+.qa-card.blue{border-left-color:var(--blue);}
+.qa-card.green{border-left-color:var(--green);}
+.qa-icon{font-size:1.3rem;margin-bottom:0.3rem;display:block;}
+.qa-title{font-family:var(--font-d);font-size:0.97rem;font-weight:600;color:var(--gold2);}
+.qa-desc{font-family:var(--font-b);font-size:0.82rem;color:var(--ivory3);margin-top:0.15rem;}
+
+.phase-row{display:grid;grid-template-columns:repeat(3,1fr);gap:0.75rem;}
+.phase-card{background:var(--bg3);border:1px solid rgba(201,168,76,0.1);padding:1rem;border-radius:var(--radius);transition:var(--t);}
+.phase-card.current{border-color:var(--gold);box-shadow:0 0 16px rgba(201,168,76,0.08);}
+.phase-card.done{border-color:rgba(46,107,62,0.35);}
+.phase-n{font-family:var(--font-b);font-size:0.62rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--gold-dim);margin-bottom:0.2rem;}
+.phase-title{font-family:var(--font-d);font-size:0.95rem;font-weight:600;color:var(--ivory);}
+.phase-desc{font-family:var(--font-t);font-size:0.82rem;color:var(--ivory3);margin-top:0.2rem;line-height:1.4;}
+
+/* ══════════════════════════════════════
+   TEORIA TABS
+══════════════════════════════════════ */
+.tabs{display:flex;border-bottom:1px solid rgba(201,168,76,0.15);margin-bottom:1.25rem;gap:0;overflow-x:auto;}
+.tab{font-family:var(--font-b);font-size:0.88rem;padding:0.6rem 1.1rem;cursor:pointer;color:var(--ivory3);border-bottom:2px solid transparent;transition:var(--t);white-space:nowrap;background:transparent;border-top:none;border-left:none;border-right:none;flex-shrink:0;}
+.tab:hover{color:var(--ivory);}
+.tab.active{color:var(--gold2);border-bottom-color:var(--gold);}
+.tab-panel{display:none;}
+.tab-panel.active{display:block;animation:fadeUp .25s ease;}
+
+/* PIANO */
+.piano{background:rgba(0,0,0,0.35);border:1px solid rgba(201,168,76,0.15);padding:1.25rem;border-radius:var(--radius);text-align:center;}
+.piano-keys{display:flex;justify-content:center;gap:3px;margin-bottom:0.75rem;}
+.key{width:40px;height:100px;background:var(--ivory);border:1px solid rgba(0,0,0,0.25);border-radius:0 0 3px 3px;cursor:pointer;transition:background .12s;display:flex;align-items:flex-end;justify-content:center;padding-bottom:5px;font-family:var(--font-b);font-size:0.72rem;color:var(--bg);font-weight:600;}
+.key:hover{background:var(--gold2);}
+.key.lit{background:var(--gold)!important;color:var(--bg);}
+.key.tonic-lit{background:var(--bordeaux)!important;color:var(--ivory);}
+
+/* SCALE DISPLAY */
+.scale-row{display:flex;gap:0.35rem;align-items:center;flex-wrap:wrap;margin:0.75rem 0;}
+.note-pill{width:44px;height:44px;border-radius:50%;border:1.5px solid rgba(201,168,76,0.2);display:flex;align-items:center;justify-content:center;font-family:var(--font-d);font-size:0.82rem;font-weight:600;color:var(--ivory3);transition:var(--t);cursor:pointer;}
+.note-pill:hover,.note-pill.active{border-color:var(--gold);color:var(--gold);background:rgba(201,168,76,0.08);}
+.note-pill.tonic{border-color:var(--bord2);color:#D4829A;background:var(--bord-pale);}
+.int-lbl{font-size:0.65rem;color:var(--ivory3);letter-spacing:0.04em;}
+
+/* NECK */
+.neck{background:rgba(0,0,0,0.3);border:1px solid rgba(201,168,76,0.13);padding:1.1rem;border-radius:var(--radius);}
+.string-row{display:flex;align-items:center;gap:0.4rem;margin-bottom:0.35rem;}
+.string-label{width:26px;font-family:var(--font-d);font-size:0.82rem;font-weight:700;color:var(--gold);text-align:right;flex-shrink:0;}
+.string-line{flex:1;display:flex;background:rgba(255,255,255,0.04);border-radius:2px;}
+.fret{flex:1;text-align:center;font-family:var(--font-b);font-size:0.75rem;color:var(--ivory3);padding:5px 2px;border-right:1px solid rgba(201,168,76,0.07);cursor:pointer;transition:var(--t);}
+.fret:last-child{border-right:none;}
+.fret:hover{background:rgba(201,168,76,0.08);color:var(--gold);}
+.fret.in-sc{background:rgba(201,168,76,0.07);color:var(--gold2);}
+.fret.is-ton{background:var(--bord-pale);color:#D4829A!important;}
+.neck-legend{display:flex;gap:1rem;margin-top:0.6rem;font-family:var(--font-t);font-size:0.75rem;color:var(--ivory3);}
+
+/* ══════════════════════════════════════
+   TUNER
+══════════════════════════════════════ */
+.tuner-wrap{background:rgba(0,0,0,0.5);border:1px solid rgba(201,168,76,0.2);padding:2rem;border-radius:var(--radius);text-align:center;margin-bottom:1rem;}
+.tuner-note{font-family:var(--font-d);font-size:5rem;font-weight:700;color:var(--ivory);line-height:1;transition:color .15s;}
+.tuner-note.green{color:#7BC49A;}
+.tuner-note.red{color:#D4829A;}
+.tuner-note.blue{color:var(--blue2);}
+.tuner-cents-txt{font-family:var(--font-b);font-size:1rem;color:var(--ivory3);font-style:italic;margin-top:0.3rem;}
+.needle-wrap{position:relative;height:72px;margin:0.75rem 0;}
+.needle-line{position:absolute;bottom:0;left:10%;right:10%;height:1.5px;background:rgba(255,255,255,0.08);}
+.needle-center{position:absolute;bottom:-3px;left:50%;transform:translateX(-50%);width:2px;height:10px;background:var(--gold);}
+.needle{position:absolute;bottom:1px;left:50%;width:1.5px;height:65px;background:linear-gradient(to top,var(--gold),transparent);transform-origin:bottom center;transform:rotate(0deg);transition:transform .12s cubic-bezier(.4,0,.2,1);}
+.tuner-freq{font-family:'Courier New',monospace;font-size:0.8rem;color:var(--ivory3);letter-spacing:0.08em;}
+.open-str-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0.6rem;margin-bottom:1rem;}
+.ostr{background:var(--gold-pale);border:1px solid rgba(201,168,76,0.18);padding:0.9rem;text-align:center;border-radius:var(--radius);cursor:pointer;transition:var(--t);}
+.ostr:hover{border-color:var(--gold);background:var(--gold-glow);}
+.ostr .n{font-family:var(--font-d);font-size:1.4rem;font-weight:700;color:var(--gold);display:block;}
+.ostr .l{font-family:var(--font-b);font-size:0.65rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--ivory3);}
+
+/* ══════════════════════════════════════
+   METRONOME + SCALES COMBO
+══════════════════════════════════════ */
+.studio-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+.metro-display{background:rgba(0,0,0,0.45);border:1px solid rgba(201,168,76,0.18);padding:1.5rem;text-align:center;border-radius:var(--radius);}
+.metro-bpm{font-family:var(--font-d);font-size:3.5rem;font-weight:700;color:var(--gold);line-height:1;}
+.metro-unit{font-family:var(--font-b);font-size:0.7rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--ivory3);margin-top:0.15rem;}
+.metro-beats{display:flex;justify-content:center;gap:0.45rem;margin:0.9rem 0;}
+.beat-dot{width:13px;height:13px;border-radius:50%;border:1px solid rgba(201,168,76,0.25);transition:background .07s,transform .07s;}
+.beat-dot.on{background:var(--gold);transform:scale(1.25);box-shadow:0 0 6px rgba(201,168,76,0.5);}
+.bpm-range{width:100%;margin:0.5rem 0;}
+input[type=range]{width:100%;appearance:none;height:3px;background:rgba(201,168,76,0.15);border-radius:2px;outline:none;cursor:pointer;}
+input[type=range]::-webkit-slider-thumb{appearance:none;width:14px;height:14px;border-radius:50%;background:var(--gold);cursor:pointer;}
+select,input[type=text]{background:rgba(0,0,0,0.35);border:1px solid rgba(201,168,76,0.18);color:var(--ivory);padding:0.5rem 0.65rem;border-radius:var(--radius);font-family:var(--font-b);font-size:0.9rem;width:100%;cursor:pointer;}
+select:focus,input[type=text]:focus{outline:none;border-color:var(--gold);}
+option{background:var(--bg2);}
+.field{display:flex;flex-direction:column;gap:0.3rem;margin-bottom:0.75rem;}
+.field-label{font-family:var(--font-b);font-size:0.68rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--ivory3);}
+
+/* Scale highlight in studio */
+.scale-notes-live{display:flex;gap:0.3rem;flex-wrap:wrap;justify-content:center;margin:0.75rem 0;}
+.snl{width:46px;height:46px;border:1.5px solid rgba(201,168,76,0.15);display:flex;align-items:center;justify-content:center;font-family:var(--font-d);font-size:0.8rem;color:var(--ivory3);transition:var(--t);border-radius:var(--radius);}
+.snl.cur{border-color:var(--gold);color:var(--gold);background:rgba(201,168,76,0.12);transform:scale(1.08);}
+.snl.played{border-color:rgba(46,107,62,0.4);color:var(--green2);background:var(--green-pale);}
+.snl.ton{border-color:var(--bord2);color:#D4829A;}
+
+/* ══════════════════════════════════════
+   RECORDING
+══════════════════════════════════════ */
+.rec-area{background:rgba(0,0,0,0.4);border:1px solid rgba(201,168,76,0.14);padding:1.5rem;border-radius:var(--radius);text-align:center;}
+.rec-dot{width:14px;height:14px;border-radius:50%;background:var(--bordeaux);display:inline-block;margin-right:0.4rem;vertical-align:middle;}
+.rec-dot.on{animation:pulse 1s ease infinite;background:#D4829A;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
+.waveform{width:100%;height:72px;background:rgba(0,0,0,0.3);border:1px solid rgba(201,168,76,0.08);border-radius:var(--radius);display:block;margin:0.75rem 0;}
+
+/* ══════════════════════════════════════
+   EAR TRAINING
+══════════════════════════════════════ */
+.ear-exercise{background:rgba(0,0,0,0.4);border:1px solid rgba(201,168,76,0.14);padding:1.75rem;text-align:center;border-radius:var(--radius);}
+.play-circle{width:72px;height:72px;border-radius:50%;border:2px solid var(--gold);background:transparent;color:var(--gold);font-size:1.8rem;cursor:pointer;transition:var(--t);display:inline-flex;align-items:center;justify-content:center;}
+.play-circle:hover{background:rgba(201,168,76,0.1);}
+.ans-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(90px,1fr));gap:0.4rem;margin-top:1.1rem;max-width:480px;margin-left:auto;margin-right:auto;}
+.ans-btn{font-family:var(--font-b);font-size:0.88rem;padding:0.6rem 0.5rem;border:1px solid rgba(201,168,76,0.18);background:rgba(0,0,0,0.25);color:var(--ivory2);cursor:pointer;border-radius:var(--radius);transition:var(--t);text-align:center;}
+.ans-btn:hover{border-color:var(--gold);color:var(--gold);}
+.ans-btn.correct{border-color:var(--green);background:var(--green-pale);color:var(--green2);}
+.ans-btn.wrong{border-color:var(--bordeaux);background:var(--bord-pale);color:#D4829A;}
+.score-row{display:flex;justify-content:center;gap:2rem;margin-top:1.25rem;}
+.score-item{text-align:center;}
+.score-n{font-family:var(--font-d);font-size:1.9rem;font-weight:700;}
+.score-n.c{color:var(--green2);}
+.score-n.w{color:#D4829A;}
+.score-n.s{color:var(--gold);}
+.score-l{font-family:var(--font-b);font-size:0.62rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--ivory3);}
+.feedback-line{height:1.8rem;font-family:var(--font-d);font-size:1rem;margin-top:0.6rem;}
+
+/* Melody dictation */
+.melody-boxes{display:flex;justify-content:center;gap:0.4rem;margin:0.9rem 0;min-height:48px;}
+.mel-box{width:48px;height:48px;border:1.5px solid rgba(201,168,76,0.2);border-radius:var(--radius);display:flex;align-items:center;justify-content:center;font-family:var(--font-d);font-size:0.82rem;color:var(--ivory3);}
+.mel-box.correct{border-color:var(--green);background:var(--green-pale);color:var(--green2);}
+.mel-box.wrong{border-color:var(--bordeaux);background:var(--bord-pale);color:#D4829A;}
+
+/* ICM Louvores list */
+.louvor-list{display:flex;flex-direction:column;gap:0.35rem;}
+.louvor-item{display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.8rem;border:1px solid rgba(201,168,76,0.1);background:var(--bg3);border-radius:var(--radius);cursor:pointer;transition:var(--t);}
+.louvor-item:hover{border-color:rgba(201,168,76,0.25);background:var(--bg2);}
+.louvor-lv{width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.6rem;font-weight:700;flex-shrink:0;}
+.lv1{background:rgba(46,107,62,0.3);color:var(--green2);}
+.lv2{background:rgba(201,168,76,0.2);color:var(--gold2);}
+.lv3{background:rgba(107,30,46,0.3);color:#D4829A;}
+.louvor-name{font-family:var(--font-b);font-size:0.9rem;color:var(--ivory);}
+.louvor-hint{font-family:var(--font-t);font-size:0.78rem;color:var(--ivory3);font-style:italic;margin-top:0.05rem;}
+.louvor-btn{margin-left:auto;font-size:0.75rem;padding:0.25rem 0.65rem;}
+
+/* ══════════════════════════════════════
+   DOTZAUER
+══════════════════════════════════════ */
+.dotz-header{display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;margin-bottom:1.25rem;}
+.dotz-current-num{font-family:var(--font-d);font-size:3.5rem;font-weight:700;color:var(--gold);line-height:1;}
+.dotz-current-name{font-family:var(--font-d);font-size:1rem;color:var(--ivory2);margin-top:0.2rem;}
+.dotz-current-focus{font-family:var(--font-t);font-size:0.88rem;color:var(--ivory3);font-style:italic;margin-top:0.2rem;}
+
+/* IMSLP PDF embed */
+.score-viewer{width:100%;height:520px;border:1px solid rgba(201,168,76,0.15);border-radius:var(--radius);background:rgba(0,0,0,0.3);display:flex;flex-direction:column;overflow:hidden;}
+.score-toolbar{display:flex;align-items:center;gap:0.6rem;padding:0.6rem 0.75rem;background:rgba(0,0,0,0.3);border-bottom:1px solid rgba(201,168,76,0.1);flex-wrap:wrap;}
+.score-toolbar-title{font-family:var(--font-d);font-size:0.85rem;color:var(--gold2);margin-right:auto;}
+.score-iframe-wrap{flex:1;overflow:hidden;position:relative;}
+.score-iframe-wrap iframe{width:100%;height:100%;border:none;background:#fff;}
+.score-no-embed{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:1rem;padding:2rem;text-align:center;}
+.score-no-embed .imslp-note{font-family:var(--font-t);font-size:0.9rem;color:var(--ivory3);line-height:1.6;}
+
+/* Study list */
+.study-list{display:flex;flex-direction:column;gap:0.35rem;}
+.study-item{display:flex;align-items:center;gap:0.75rem;padding:0.7rem 1rem;border:1px solid rgba(201,168,76,0.09);background:var(--bg3);border-radius:var(--radius);cursor:pointer;transition:var(--t);}
+.study-item:hover{border-color:rgba(201,168,76,0.22);}
+.study-item.done{border-color:rgba(46,107,62,0.28);background:rgba(46,107,62,0.04);}
+.study-item.cur{border-color:var(--gold);background:rgba(201,168,76,0.05);}
+.study-num{font-family:var(--font-d);font-size:1.2rem;font-weight:700;color:var(--gold);min-width:2rem;}
+.study-info{flex:1;}
+.study-name-txt{font-family:var(--font-b);font-size:0.92rem;color:var(--ivory);}
+.study-focus-txt{font-family:var(--font-t);font-size:0.78rem;color:var(--ivory3);font-style:italic;}
+.diff-dots{display:flex;gap:2px;margin-top:3px;}
+.dd{width:6px;height:6px;border-radius:50%;background:rgba(201,168,76,0.15);}
+.dd.f{background:var(--gold);}
+.study-status-icon{font-size:1rem;}
+
+/* Checklist */
+.check-item{display:flex;align-items:center;gap:0.65rem;padding:0.5rem 0;border-bottom:1px solid rgba(201,168,76,0.05);cursor:pointer;}
+.check-item:last-child{border-bottom:none;}
+.check-box{width:18px;height:18px;border:1px solid rgba(201,168,76,0.28);border-radius:2px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:0.7rem;color:var(--green2);transition:var(--t);}
+.check-box.on{background:var(--green-pale);border-color:var(--green);}
+.check-txt{font-family:var(--font-t);font-size:0.9rem;color:var(--ivory2);line-height:1.4;}
+.check-txt.done{color:var(--ivory3);text-decoration:line-through;}
+
+/* ══════════════════════════════════════
+   RHYTHM
+══════════════════════════════════════ */
+.rhythm-pad{width:100%;height:110px;background:rgba(0,0,0,0.4);border:2px solid rgba(201,168,76,0.18);border-radius:var(--radius);display:flex;align-items:center;justify-content:center;cursor:pointer;font-family:var(--font-d);font-size:1rem;color:var(--ivory3);letter-spacing:0.08em;user-select:none;-webkit-tap-highlight-color:transparent;transition:border-color .1s;}
+.rhythm-pad:active,.rhythm-pad.hit{border-color:var(--gold);background:rgba(201,168,76,0.05);}
+.beat-grid-row{display:flex;gap:0.3rem;justify-content:center;margin:0.75rem 0;}
+.bgr-dot{width:14px;height:14px;border-radius:50%;border:1px solid rgba(201,168,76,0.25);transition:background .07s,transform .07s;}
+.bgr-dot.on{background:var(--gold);transform:scale(1.2);}
+.bgr-dot.accent{border-color:var(--gold);}
+
+/* ══════════════════════════════════════
+   PROGRESS PAGE
+══════════════════════════════════════ */
+.trophy-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:0.75rem;}
+.trophy{background:var(--bg3);border:1px solid rgba(201,168,76,0.08);padding:0.9rem;text-align:center;border-radius:var(--radius);transition:var(--t);}
+.trophy.earned{border-color:rgba(201,168,76,0.35);background:rgba(201,168,76,0.04);}
+.trophy-icon{font-size:1.9rem;display:block;margin-bottom:0.3rem;filter:grayscale(1);opacity:0.25;}
+.trophy.earned .trophy-icon{filter:none;opacity:1;}
+.trophy-name{font-family:var(--font-b);font-size:0.72rem;color:var(--ivory3);line-height:1.3;}
+.trophy.earned .trophy-name{color:var(--gold2);}
+
+.session-log{display:flex;flex-direction:column;gap:0.35rem;}
+.log-entry{display:flex;justify-content:space-between;padding:0.45rem 0;border-bottom:1px solid rgba(201,168,76,0.06);font-family:var(--font-t);font-size:0.88rem;}
+.log-date{color:var(--ivory2);}
+.log-mins{color:var(--gold);}
+
+/* VIBRATO page */
+.vib-step{display:flex;gap:1rem;margin-bottom:1rem;}
+.vib-num{font-family:var(--font-d);font-size:1.8rem;font-weight:700;color:var(--gold-dim);flex-shrink:0;min-width:2rem;line-height:1;}
+.vib-content{}
+.vib-title{font-family:var(--font-d);font-size:1rem;font-weight:600;color:var(--gold2);margin-bottom:0.25rem;}
+.vib-body{font-family:var(--font-t);font-size:0.92rem;color:var(--ivory2);line-height:1.6;}
+
+/* SESSION TIMER */
+.session-timer-display{font-family:'Courier New',monospace;font-size:2.2rem;color:var(--gold);letter-spacing:0.08em;text-align:center;padding:1rem;background:rgba(0,0,0,0.35);border:1px solid rgba(201,168,76,0.14);border-radius:var(--radius);margin-bottom:0.75rem;}
+
+
+/* Speed control */
+.speed-control{display:flex;align-items:center;gap:0.75rem;margin:0.6rem 0;flex-wrap:wrap;}
+.speed-label{font-family:var(--font-b);font-size:0.75rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--ivory3);white-space:nowrap;}
+.speed-val{font-family:var(--font-d);font-size:1rem;color:var(--gold);min-width:2rem;text-align:center;}
+.speed-btn{font-family:var(--font-b);font-size:0.78rem;padding:0.3rem 0.7rem;border:1px solid rgba(201,168,76,0.2);background:rgba(0,0,0,0.25);color:var(--ivory3);cursor:pointer;border-radius:var(--radius);transition:var(--t);}
+.speed-btn:hover,.speed-btn.active{border-color:var(--gold);color:var(--gold);}
+
+/* Score reader */
+.score-reader-drop{border:2px dashed rgba(201,168,76,0.25);border-radius:var(--radius);padding:2.5rem 1.5rem;text-align:center;cursor:pointer;transition:var(--t);background:rgba(0,0,0,0.2);}
+.score-reader-drop:hover,.score-reader-drop.drag-over{border-color:var(--gold);background:rgba(201,168,76,0.05);}
+.score-reader-drop .dr-icon{font-size:2.5rem;display:block;margin-bottom:0.5rem;}
+.score-reader-drop .dr-txt{font-family:var(--font-b);font-size:1rem;color:var(--ivory3);font-style:italic;}
+.parsed-notes-row{display:flex;gap:0.35rem;flex-wrap:wrap;margin:1rem 0;align-items:center;}
+.parsed-note{background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.2);padding:0.3rem 0.6rem;border-radius:var(--radius);font-family:var(--font-d);font-size:0.85rem;color:var(--gold2);cursor:pointer;transition:var(--t);}
+.parsed-note:hover{background:rgba(201,168,76,0.15);}
+.parsed-note.playing{background:var(--gold);color:var(--bg);transform:scale(1.05);}
+.reader-status{font-family:var(--font-b);font-size:0.9rem;color:var(--ivory3);font-style:italic;text-align:center;padding:0.5rem;}
+.reader-preview{max-width:100%;max-height:300px;object-fit:contain;border-radius:var(--radius);border:1px solid rgba(201,168,76,0.15);margin:0.75rem auto;display:block;}
+
+/* RESPONSIVE */
+@media(max-width:700px){
+  aside{display:none;}
+  .g2,.g3,.g4{grid-template-columns:1fr;}
+  .studio-grid{grid-template-columns:1fr;}
+  .phase-row{grid-template-columns:1fr;}
+  .quick-actions{grid-template-columns:1fr;}
+}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script>
+// ══ SUPABASE CONFIG ══
+// Substitua com suas credenciais do projeto Supabase
+const SUPABASE_URL = 'https://uhizagperhwgsyaqxtvv.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVoaXphZ3Blcmh3Z3N5YXF4dHZ2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ4ODU3MzQsImV4cCI6MjA5MDQ2MTczNH0.11dsPXi1dyk5RePgn03ja7pg2sBu1_A9IuHiXdjK1O0';
+const _sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const EDGE_FN_URL = SUPABASE_URL + '/functions/v1/analyze-score';
+
+let _currentUser = null;
+let _authTab = 'login';
+
+function authSwitchTab(tab) {
+  _authTab = tab;
+  const isLogin = tab === 'login';
+  document.getElementById('tab-login').style.borderBottomColor = isLogin ? 'var(--gold)' : 'transparent';
+  document.getElementById('tab-signup').style.borderBottomColor = !isLogin ? 'var(--gold)' : 'transparent';
+  document.getElementById('tab-login').style.color = isLogin ? 'var(--gold2)' : 'var(--ivory3)';
+  document.getElementById('tab-signup').style.color = !isLogin ? 'var(--gold2)' : 'var(--ivory3)';
+  document.getElementById('signup-name-field').style.display = isLogin ? 'none' : 'flex';
+  document.getElementById('auth-submit-btn').textContent = isLogin ? 'Entrar' : 'Criar conta';
+  document.getElementById('auth-switch-to-signup').style.display = isLogin ? 'block' : 'none';
+  document.getElementById('auth-switch-to-login').style.display = !isLogin ? 'block' : 'none';
+  document.getElementById('auth-error').style.display = 'none';
+}
+
+function authShowError(msg) {
+  const el = document.getElementById('auth-error');
+  el.textContent = msg;
+  el.style.display = 'block';
+}
+
+async function authSubmit() {
+  const email = document.getElementById('auth-email').value.trim();
+  const pass = document.getElementById('auth-pass').value;
+  const name = document.getElementById('auth-name')?.value.trim();
+  const btn = document.getElementById('auth-submit-btn');
+  const loading = document.getElementById('auth-loading');
+  if(!email || !pass) { authShowError('Preencha email e senha'); return; }
+  if(pass.length < 6) { authShowError('Senha mínima de 6 caracteres'); return; }
+  btn.disabled = true;
+  loading.style.display = 'block';
+  document.getElementById('auth-error').style.display = 'none';
+  try {
+    let result;
+    if(_authTab === 'login') {
+      result = await _sb.auth.signInWithPassword({ email, password: pass });
+    } else {
+      result = await _sb.auth.signUp({
+        email, password: pass,
+        options: { data: { name: name || email.split('@')[0] } }
+      });
+    }
+    if(result.error) {
+      const msgs = {
+        'Invalid login credentials': 'Email ou senha incorretos',
+        'User already registered': 'Email já cadastrado. Faça login.',
+        'Email not confirmed': 'Confirme seu email antes de entrar',
+      };
+      authShowError(msgs[result.error.message] || result.error.message);
+    } else if(_authTab === 'signup' && !result.data.session) {
+      authShowError('✅ Conta criada! Verifique seu email para confirmar.');
+    } else if(result.data.session) {
+      await onAuthSuccess(result.data.session.user);
+    }
+  } catch(e) {
+    console.error('AUTH ERROR:', e, e.message, e.stack);
+    authShowError('Erro: ' + (e.message || 'desconhecido'));
+  }
+  btn.disabled = false;
+  loading.style.display = 'none';
+}
+
+async function onAuthSuccess(user) {
+  try {
+    _currentUser = user;
+    document.getElementById('auth-overlay').style.display = 'none';
+    document.getElementById('app').style.opacity = '1';
+    const name = user.user_metadata?.name || user.email.split('@')[0];
+    const hdrUser = document.getElementById('hdr-user');
+    if(hdrUser) hdrUser.textContent = '👤 ' + name;
+    const logoutBtn = document.getElementById('logout-btn');
+    if(logoutBtn) logoutBtn.style.display = 'block';
+    try { await loadStateFromSupabase(user.id); } catch(e) { console.warn('State load skipped:', e); }
+    try { updateStats(); } catch(e) { console.warn('Stats update skipped:', e); }
+  } catch(e) {
+    console.error('onAuthSuccess error:', e);
+    document.getElementById('auth-overlay').style.display = 'none';
+    document.getElementById('app').style.opacity = '1';
+  }
+}
+</script>
+</head>
+<body>
+
+<!-- AUTH MODAL -->
+<div id="auth-overlay" style="position:fixed;inset:0;background:rgba(26,20,16,0.97);z-index:9000;display:flex;align-items:center;justify-content:center;font-family:var(--font-b);">
+  <div style="background:var(--bg2);border:1px solid rgba(201,168,76,0.22);padding:2.5rem;max-width:400px;width:90%;border-radius:3px;">
+    <div style="text-align:center;margin-bottom:1.75rem;">
+      <div style="font-size:2.5rem;margin-bottom:0.4rem;">🎻</div>
+      <div style="font-family:var(--font-d);font-size:1.6rem;font-weight:700;color:var(--ivory);">Arco & <em style="color:var(--gold);font-style:italic;">Alma</em></div>
+      <div style="font-size:0.72rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--ivory3);margin-top:0.25rem;">Violoncelo</div>
+    </div>
+    <div style="display:flex;border-bottom:1px solid rgba(201,168,76,0.15);margin-bottom:1.25rem;">
+      <button id="tab-login" onclick="authSwitchTab('login')" style="flex:1;background:none;border:none;border-bottom:2px solid var(--gold);color:var(--gold2);padding:0.6rem;font-family:var(--font-b);font-size:0.95rem;cursor:pointer;">Entrar</button>
+      <button id="tab-signup" onclick="authSwitchTab('signup')" style="flex:1;background:none;border:none;border-bottom:2px solid transparent;color:var(--ivory3);padding:0.6rem;font-family:var(--font-b);font-size:0.95rem;cursor:pointer;">Criar conta</button>
+    </div>
+    <div id="auth-error" style="display:none;background:rgba(107,30,46,0.3);border:1px solid var(--bordeaux);padding:0.6rem 0.75rem;border-radius:3px;font-size:0.85rem;color:#D4829A;margin-bottom:0.9rem;"></div>
+    <div class="field"><span class="field-label">Email</span><input type="email" id="auth-email" placeholder="seu@email.com" style="width:100%;"></div>
+    <div class="field"><span class="field-label">Senha</span><input type="password" id="auth-pass" placeholder="mínimo 6 caracteres" style="width:100%;"></div>
+    <div class="field" id="signup-name-field" style="display:none;"><span class="field-label">Nome</span><input type="text" id="auth-name" placeholder="Seu nome" style="width:100%;"></div>
+    <button class="btn btn-gold" id="auth-submit-btn" onclick="authSubmit()" style="width:100%;margin-top:0.5rem;justify-content:center;font-size:1rem;letter-spacing:0.06em;">Entrar</button>
+    <div id="auth-loading" style="display:none;text-align:center;color:var(--ivory3);font-style:italic;margin-top:0.75rem;font-size:0.9rem;">Aguarde...</div>
+    <div style="text-align:center;margin-top:1.1rem;">
+      <button onclick="authSwitchTab('signup')" id="auth-switch-to-signup" style="background:none;border:none;color:var(--ivory3);font-family:var(--font-b);font-size:0.85rem;cursor:pointer;">Não tem conta? <span style="color:var(--gold);">Criar agora</span></button>
+      <button onclick="authSwitchTab('login')" id="auth-switch-to-login" style="display:none;background:none;border:none;color:var(--ivory3);font-family:var(--font-b);font-size:0.85rem;cursor:pointer;">Já tem conta? <span style="color:var(--gold);">Entrar</span></button>
+    </div>
+  </div>
+</div>
+
+<!-- HEADER -->
+<header>
+  <a class="logo" href="#" onclick="showPage('dashboard')">
+    <!-- Cello SVG icon -->
+    <svg class="logo-icon" viewBox="0 0 32 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- Scroll/peg box -->
+      <path d="M14 2 Q16 0 18 2 L18 6 Q16 5 14 6 Z" fill="#C9A84C"/>
+      <!-- Neck -->
+      <rect x="14.5" y="6" width="3" height="14" fill="#C9A84C" rx="0.5"/>
+      <!-- Upper bout -->
+      <ellipse cx="16" cy="24" rx="6" ry="5.5" fill="#C9A84C"/>
+      <!-- Waist (C-bouts) -->
+      <rect x="12.5" y="28" width="7" height="4" fill="#C9A84C"/>
+      <!-- Lower bout -->
+      <ellipse cx="16" cy="36" rx="8.5" ry="8" fill="#C9A84C"/>
+      <!-- f-holes -->
+      <path d="M12.5 31 Q11 33 12.5 35" stroke="#1C1510" stroke-width="1" fill="none"/>
+      <path d="M19.5 31 Q21 33 19.5 35" stroke="#1C1510" stroke-width="1" fill="none"/>
+      <!-- Tailpiece -->
+      <path d="M13 43 L19 43 L18 47 L14 47 Z" fill="#9A7830"/>
+      <!-- Strings -->
+      <line x1="14.5" y1="6" x2="14.5" y2="46" stroke="rgba(201,168,76,0.35)" stroke-width="0.5"/>
+      <line x1="15.5" y1="6" x2="15.3" y2="46" stroke="rgba(201,168,76,0.3)" stroke-width="0.6"/>
+      <line x1="16.5" y1="6" x2="16.7" y2="46" stroke="rgba(201,168,76,0.25)" stroke-width="0.7"/>
+      <line x1="17.5" y1="6" x2="17.5" y2="46" stroke="rgba(201,168,76,0.2)" stroke-width="0.8"/>
+      <!-- Bridge -->
+      <rect x="13" y="33" width="6" height="1" fill="#7A6030" rx="0.3"/>
+      <!-- Endpin -->
+      <line x1="16" y1="44" x2="16" y2="51" stroke="#7A6030" stroke-width="1.2"/>
+    </svg>
+    <div>
+      <div class="logo-text"><em>Arco</em> & Alma</div>
+      <div class="logo-sub">Violoncelo</div>
+    </div>
+  </a>
+  <div class="header-right">
+    <div class="streak-badge">🔥 <span class="streak-num" id="hdr-streak">0</span> dias</div>
+    <div style="font-family:var(--font-b);font-size:0.8rem;color:var(--ivory3);" id="hdr-time"></div>
+    <div style="display:flex;align-items:center;gap:0.6rem;">
+      <div style="font-family:var(--font-b);font-size:0.8rem;color:var(--ivory3);" id="hdr-user"></div>
+      <button class="btn btn-outline btn-sm" id="logout-btn" onclick="authLogout()" style="display:none;padding:0.3rem 0.75rem;font-size:0.75rem;">Sair</button>
+    </div>
+  </div>
+</header>
+
+<!-- BODY -->
+<div class="app-body">
+
+<!-- SIDEBAR -->
+<aside>
+  <div class="nav-group-label">Início</div>
+  <div class="nav-item active" data-page="dashboard" onclick="showPage('dashboard')">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+    Painel
+  </div>
+
+  <div class="nav-group-label">Teoria</div>
+  <div class="nav-item" data-page="teoria" onclick="showPage('teoria')">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3 L2 12 L12 21 L22 12Z M12 8 L17 12 L12 16 L7 12Z" opacity=".7"/></svg>
+    Notas & Escalas
+  </div>
+  <div class="nav-item" data-page="tonalidade" onclick="showPage('tonalidade')">
+    <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4" fill="var(--bg)"/></svg>
+    Tonalidade & Tônica
+  </div>
+  <div class="nav-item" data-page="ritmo" onclick="showPage('ritmo')">
+    <svg viewBox="0 0 24 24" fill="currentColor"><rect x="2" y="8" width="3" height="8" rx="1"/><rect x="7" y="5" width="3" height="14" rx="1"/><rect x="12" y="10" width="3" height="6" rx="1"/><rect x="17" y="3" width="3" height="18" rx="1"/></svg>
+    Ritmo
+  </div>
+  <div class="nav-item" data-page="arco" onclick="showPage('arco')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20 Q12 4 20 4"/><line x1="20" y1="4" x2="22" y2="6"/></svg>
+    Arco & Sonoridade
+  </div>
+  <div class="nav-item" data-page="vibrato" onclick="showPage('vibrato')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12 Q6 6 10 12 Q14 18 18 12 Q20 9 22 12"/></svg>
+    Vibrato
+  </div>
+
+  <div class="nav-group-label">Prática</div>
+  <div class="nav-item" data-page="studio" onclick="showPage('studio')">
+    <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+    Estúdio — Afinador+Metro+Escala
+  </div>
+  <div class="nav-item" data-page="afinador" onclick="showPage('afinador')">
+    <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="7" stroke="var(--bg)" stroke-width="2"/></svg>
+    Afinador Cromático
+  </div>
+  <div class="nav-item" data-page="gravacao" onclick="showPage('gravacao')">
+    <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2" fill="var(--bg)"/></svg>
+    Gravação & Análise
+  </div>
+  <div class="nav-item" data-page="eartraining" onclick="showPage('eartraining')">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.5 3A6.5 6.5 0 0 1 24 9.5c0 4-3 7.5-6.5 8.5v3h-2v-3.5A8.5 8.5 0 0 0 9 9.5 6.5 6.5 0 0 1 15.5 3z"/><circle cx="17" cy="20" r="1.5"/></svg>
+    Ear Training
+  </div>
+
+  <div class="nav-group-label">Método</div>
+  <div class="nav-item" data-page="dotzauer" onclick="showPage('dotzauer')">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6" fill="none" stroke="var(--bg)" stroke-width="1.5"/><line x1="8" y1="13" x2="16" y2="13" stroke="var(--bg)" stroke-width="1.5"/><line x1="8" y1="17" x2="13" y2="17" stroke="var(--bg)" stroke-width="1.5"/></svg>
+    Método Dotzauer
+  </div>
+
+  <div class="nav-item" data-page="leitor" onclick="showPage('leitor')">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 2H4a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9l-7-7z"/><path d="M9 2v7h7" fill="none" stroke="var(--bg)" stroke-width="1.5"/><path d="M7 13h10M7 17h6" stroke="var(--bg)" stroke-width="1.5"/></svg>
+    Leitura de Partituras
+  </div>
+
+  <div class="nav-group-label">Conquistas</div>
+  <div class="nav-item" data-page="progresso" onclick="showPage('progresso')">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+    Progresso & Troféus
+  </div>
+
+  <div class="nav-footer"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="f8958d8b919b97b88e91979497969b9d9497d6998888">[email&#160;protected]</a></div>
+</aside>
+
+<!-- MAIN -->
+<main>
+
+<!-- ═══ DASHBOARD ═══ -->
+<div class="page active" id="page-dashboard">
+  <div class="dash-hero">
+    <div class="dash-greeting">Boa noite —</div>
+    <div class="dash-name">Bem-vindo, Músico</div>
+    <div class="dash-quote">Cada nota praticada é um passo em direção à maestria.</div>
+    <div class="stat-row">
+      <div class="stat"><span class="stat-n" id="d-min">0</span><span class="stat-l">Min Hoje</span></div>
+      <div class="stat"><span class="stat-n" id="d-esc">0<span style="font-size:1rem;color:var(--ivory3)">/8</span></span><span class="stat-l">Escalas</span></div>
+      <div class="stat"><span class="stat-n" id="d-comp">0</span><span class="stat-l">Completas</span></div>
+      <div class="stat"><span class="stat-n" id="d-sess">0</span><span class="stat-l">Sessões</span></div>
+    </div>
+  </div>
+
+  <div class="session-timer-display" id="session-clock">00:00</div>
+  <div class="btn-row" style="margin-bottom:1.25rem;">
+    <button class="btn btn-gold" id="sess-btn" onclick="toggleSession()">▶ Iniciar Sessão de Hoje</button>
+    <button class="btn btn-outline" onclick="showPage('studio')">🎼 Estúdio Completo</button>
+    <button class="btn btn-outline" onclick="showPage('eartraining')">👂 Ear Training</button>
+  </div>
+
+  <div style="font-family:var(--font-d);font-size:0.7rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--ivory3);margin-bottom:0.6rem;">Ações Rápidas</div>
+  <div class="quick-actions">
+    <div class="qa-card gold" onclick="showPage('afinador')"><span class="qa-icon">🎯</span><div class="qa-title">Afinar Violoncelo</div><div class="qa-desc">Afinador cromático</div></div>
+    <div class="qa-card blue" onclick="showPage('studio')"><span class="qa-icon">🎵</span><div class="qa-title">Praticar Escalas</div><div class="qa-desc">Com metrônomo e afinador</div></div>
+    <div class="qa-card bordeaux" onclick="showPage('dotzauer')"><span class="qa-icon">📜</span><div class="qa-title">Exercício Dotzauer</div><div class="qa-desc">Método fundamental</div></div>
+    <div class="qa-card green" onclick="showPage('gravacao')"><span class="qa-icon">🎙</span><div class="qa-title">Gravar Sessão</div><div class="qa-desc">Ouvir e comparar</div></div>
+  </div>
+
+  <div class="sep"></div>
+  <div style="font-family:var(--font-d);font-size:0.7rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--ivory3);margin-bottom:0.6rem;">Fases de Progressão</div>
+  <div class="phase-row">
+    <div class="phase-card current">
+      <div class="phase-n">Fase 1 · Meses 1–2</div>
+      <div class="phase-title">Fundamentos</div>
+      <div class="phase-desc">Arco, afinação e Dotzauer 1–5</div>
+      <div class="prog-wrap"><div class="prog-fill" id="ph1" style="width:0%"></div></div>
+    </div>
+    <div class="phase-card">
+      <div class="phase-n">Fase 2 · Meses 3–4</div>
+      <div class="phase-title">Consolidação</div>
+      <div class="phase-desc">Dotzauer 6–10 e ear training avançado</div>
+      <div class="prog-wrap"><div class="prog-fill" id="ph2" style="width:0%"></div></div>
+    </div>
+    <div class="phase-card">
+      <div class="phase-n">Fase 3 · Mês 5+</div>
+      <div class="phase-title">Vibrato & Independência</div>
+      <div class="phase-desc">Dotzauer 11–20 e melodias de ouvido</div>
+      <div class="prog-wrap"><div class="prog-fill" id="ph3" style="width:0%"></div></div>
+    </div>
+  </div>
+
+  <div class="sep"></div>
+  <div class="card" style="border-left:2px solid var(--gold);">
+    <div class="card-body" style="font-style:italic;font-size:1.05rem;">"A técnica é o veículo da expressão. Cuide dela como cuida do seu instrumento."</div>
+    <div style="font-family:var(--font-b);font-size:0.7rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--ivory3);margin-top:0.5rem;">— Método Dotzauer</div>
+  </div>
+</div>
+
+<!-- ═══ TEORIA ═══ -->
+<div class="page" id="page-teoria">
+  <div class="page-header">
+    <div class="page-title">Notas & <em>Escalas</em></div>
+    <div class="page-sub">A família de sons que governa toda música</div>
+  </div>
+  <div class="tabs">
+    <button class="tab active" onclick="teoriaTab(this,'t-notas')">As 7 Notas</button>
+    <button class="tab" onclick="teoriaTab(this,'t-maior')">Escala Maior</button>
+    <button class="tab" onclick="teoriaTab(this,'t-menor')">Escala Menor</button>
+    <button class="tab" onclick="teoriaTab(this,'t-neck')">No Violoncelo</button>
+  </div>
+
+  <div class="tab-panel active" id="t-notas">
+    <div class="card"><div class="card-title">🎵 As 7 notas</div><div class="card-body">Toda música ocidental usa apenas <strong style="color:var(--gold2)">7 notas</strong>: Dó, Ré, Mi, Fá, Sol, Lá, Si. Depois do Si volta um Dó mais agudo. Esse ciclo se repete por toda a extensão do instrumento.</div></div>
+    <div class="piano">
+      <div class="piano-keys" id="piano7">
+        <div class="key" data-f="261.63" onclick="playKey(this)">Dó</div>
+        <div class="key" data-f="293.66" onclick="playKey(this)">Ré</div>
+        <div class="key" data-f="329.63" onclick="playKey(this)">Mi</div>
+        <div class="key" data-f="349.23" onclick="playKey(this)">Fá</div>
+        <div class="key" data-f="392.00" onclick="playKey(this)">Sol</div>
+        <div class="key" data-f="440.00" onclick="playKey(this)">Lá</div>
+        <div class="key" data-f="493.88" onclick="playKey(this)">Si</div>
+        <div class="key" data-f="523.25" onclick="playKey(this)">Dó'</div>
+      </div>
+      <div style="font-family:var(--font-t);font-size:0.85rem;color:var(--ivory3);font-style:italic;">Clique para ouvir cada nota. O último Dó é igual ao primeiro, só mais agudo.</div>
+    </div>
+    <div class="tip"><strong>Exercício no violoncelo:</strong> Toque a escala de Dó maior e fale o nome de cada nota em voz alta. Conecte nome, dedo e som.</div>
+  </div>
+
+  <div class="tab-panel" id="t-maior">
+    <div class="card"><div class="card-title">☀️ Escala Maior — alegria e esperança</div><div class="card-body">A escala maior tem sonoridade "alegre", "ascendente". A maioria dos louvores da ICM a usa. Padrão de distâncias: <strong style="color:var(--gold2)">T – T – S – T – T – T – S</strong> (T=Tom · S=Semitom).</div></div>
+    <div class="field" style="max-width:200px;"><span class="field-label">Tônica</span>
+      <select id="sel-maior-root" onchange="renderScale('maior')">
+        <option value="C">Dó</option><option value="D">Ré</option><option value="E">Mi</option>
+        <option value="F">Fá</option><option value="G">Sol</option><option value="A">Lá</option><option value="B">Si</option>
+      </select>
+    </div>
+    <div class="scale-row" id="scale-maior"></div>
+    <div class="btn-row"><button class="btn btn-gold" onclick="playScaleAudio('C','maior')">▶ Ouvir Dó maior</button><button class="btn btn-outline" onclick="playScaleAudio(document.getElementById('sel-maior-root').value,'maior')">▶ Ouvir escala selecionada</button></div>
+    <div class="speed-control">
+      <span class="speed-label">Velocidade</span>
+      <button class="speed-btn active" onclick="setScaleSpeed(0.5,this)">🐢 Lento</button>
+      <button class="speed-btn" onclick="setScaleSpeed(1.0,this)">▶ Normal</button>
+      <button class="speed-btn" onclick="setScaleSpeed(1.8,this)">🐇 Rápido</button>
+    </div>
+  </div>
+
+  <div class="tab-panel" id="t-menor">
+    <div class="card"><div class="card-title">🌙 Escala Menor — introspecção e solenidade</div><div class="card-body">Sonoridade mais sombria. "Nesta Hora de Clamor", "O Pastor de Israel" e "Além do Véu" têm trechos em escala menor. Padrão: <strong style="color:var(--gold2)">T – S – T – T – S – T – T</strong>.</div></div>
+    <div class="field" style="max-width:200px;"><span class="field-label">Tônica</span>
+      <select id="sel-menor-root" onchange="renderScale('menor')">
+        <option value="A">Lá</option><option value="B">Si</option><option value="C">Dó</option>
+        <option value="D">Ré</option><option value="E">Mi</option><option value="F">Fá</option><option value="G">Sol</option>
+      </select>
+    </div>
+    <div class="scale-row" id="scale-menor"></div>
+    <div class="btn-row">
+      <button class="btn btn-gold" onclick="playScaleAudio('A','menor')">▶ Ouvir Lá menor</button>
+      <button class="btn btn-outline" onclick="compareMajMin()">🔀 Comparar com maior</button></div>
+    <div class="speed-control">
+      <span class="speed-label">Velocidade</span>
+      <button class="speed-btn active" onclick="setScaleSpeed(0.5,this)">🐢 Lento</button>
+      <button class="speed-btn" onclick="setScaleSpeed(1.0,this)">▶ Normal</button>
+      <button class="speed-btn" onclick="setScaleSpeed(1.8,this)">🐇 Rápido</button>
+    </div>
+    <div style="display:none">
+    </div>
+    <div class="tip" style="margin-top:1rem;"><strong>Teste de ouvido:</strong> Coloque um louvor e pergunte: esse começo soa como a escala maior (alegre) ou menor (sombrio)? Isso é treinamento auditivo.</div>
+  </div>
+
+  <div class="tab-panel" id="t-neck">
+    <div class="card"><div class="card-title">🎻 Notas no violoncelo — 1ª posição</div><div class="card-body">Notas destacadas pertencem à escala selecionada. Tônica em roxo.</div></div>
+    <div style="display:flex;gap:0.75rem;flex-wrap:wrap;margin-bottom:0.75rem;">
+      <div class="field" style="flex:1;min-width:100px;"><span class="field-label">Tônica</span>
+        <select id="neck-root" onchange="renderNeck()"><option value="C">Dó</option><option value="D">Ré</option><option value="E">Mi</option><option value="F">Fá</option><option value="G">Sol</option><option value="A">Lá</option><option value="B">Si</option></select>
+      </div>
+      <div class="field" style="flex:1;min-width:100px;"><span class="field-label">Modo</span>
+        <select id="neck-mode" onchange="renderNeck()"><option value="maior">Maior</option><option value="menor">Menor</option></select>
+      </div>
+    </div>
+    <div class="neck" id="neck-diagram"></div>
+    <div class="neck-legend"><span>● Corda solta</span><span style="color:var(--gold2)">■ Na escala</span><span style="color:#D4829A">■ Tônica</span></div>
+  </div>
+</div>
+
+<!-- ═══ TONALIDADE ═══ -->
+<div class="page" id="page-tonalidade">
+  <div class="page-header"><div class="page-title"><em>Tonalidade</em> & Tônica</div><div class="page-sub">Encontre a nota "casa" de qualquer música</div></div>
+  <div class="g2">
+    <div class="card"><div class="card-title">🏠 A tônica</div><div class="card-body">Em toda música há uma nota que soa como "fim", como "chegou em casa". Essa é a <strong style="color:var(--gold2)">tônica</strong>. Encontrá-la é o primeiro passo para tocar de ouvido.</div></div>
+    <div class="card"><div class="card-title">🗺️ Tonalidade</div><div class="card-body">Tonalidade = o grupo de 7 notas de uma música + a tônica. "Dó maior" = notas naturais com Dó como centro. Você não precisa saber o nome — precisa ouvir e encontrar.</div></div>
+  </div>
+  <div class="sep"></div>
+  <div class="card-title" style="margin-bottom:0.75rem;">🎮 Maior ou Menor?</div>
+  <div class="ear-exercise">
+    <div style="font-family:var(--font-b);color:var(--ivory3);font-style:italic;margin-bottom:1rem;">Ouça e identifique o clima</div>
+    <button class="play-circle" onclick="playMM()">▶</button>
+    <div class="feedback-line" id="mm-fb"></div>
+    <div class="ans-grid" style="max-width:260px;">
+      <button class="ans-btn" onclick="ansMM('maior')">☀️ Maior</button>
+      <button class="ans-btn" onclick="ansMM('menor')">🌙 Menor</button>
+    </div>
+    <div class="score-row">
+      <div class="score-item"><span class="score-n c" id="mm-c">0</span><div class="score-l">Corretas</div></div>
+      <div class="score-item"><span class="score-n w" id="mm-w">0</span><div class="score-l">Erradas</div></div>
+    </div>
+  </div>
+  <div class="tip" style="margin-top:1rem;">
+    <strong>Louvores ICM — Maior:</strong> Como Não Entoar Meu Louvor · Meu Deus Vence a Batalha · Venho Senhor<br>
+    <strong>Louvores ICM — Menor:</strong> Nesta Hora de Clamor · O Pastor de Israel · Além do Véu
+  </div>
+</div>
+
+<!-- ═══ RITMO ═══ -->
+<div class="page" id="page-ritmo">
+  <div class="page-header"><div class="page-title"><em>Ritmo</em></div><div class="page-sub">O pulso que organiza o tempo musical</div></div>
+  <div class="g2">
+    <div class="card"><div class="card-title">💓 Pulso vs Ritmo</div><div class="card-body">O <strong style="color:var(--gold2)">pulso</strong> é a batida regular (como o coração). O <strong style="color:var(--gold2)">ritmo</strong> é o padrão de notas longas e curtas que dança sobre o pulso. Sentir o pulso é anterior a ler partitura.</div></div>
+    <div class="card"><div class="card-title">📏 Figuras Rítmicas</div><div class="card-body">
+      <strong style="color:var(--gold2)">Semibreve</strong> = 4 tempos — — — —<br>
+      <strong style="color:var(--gold2)">Mínima</strong> = 2 tempos — —<br>
+      <strong style="color:var(--gold2)">Semínima ♩</strong> = 1 tempo •<br>
+      <strong style="color:var(--gold2)">Colcheia ♪</strong> = ½ tempo ··
+    </div></div>
+  </div>
+  <div class="card-title" style="margin-bottom:0.6rem;">🥁 Pad de Ritmo — Bata no pulso</div>
+  <div class="rhythm-pad" id="rpad" onmousedown="rhythmHit()" ontouchstart="rhythmHit()">Toque aqui no ritmo da música</div>
+  <div class="beat-grid-row" id="bgrid"></div>
+  <div style="text-align:center;margin-top:0.4rem;font-family:var(--font-b);font-size:0.9rem;color:var(--ivory3);">BPM detectado: <span id="bpm-detect" style="color:var(--gold);font-family:var(--font-d);font-size:1.1rem;">—</span></div>
+  <div class="tip" style="margin-top:1rem;"><strong>Exercício:</strong> Coloque qualquer louvor e bata palmas no pulso. Depois bata no ritmo da melodia. Perceba que a melodia varia sobre o pulso fixo.</div>
+</div>
+
+<!-- ═══ ARCO & SONORIDADE ═══ -->
+<div class="page" id="page-arco">
+  <div class="page-header"><div class="page-title">Arco & <em>Sonoridade</em></div><div class="page-sub">Os 3 fatores que constroem um bom som</div></div>
+  <div class="g3">
+    <div class="card"><div class="card-title">⚡ Velocidade</div><div class="card-body">Arco rápido = som brilhante e forte. Arco lento = som escuro e suave. A velocidade é a variável mais importante.</div></div>
+    <div class="card"><div class="card-title">⚖️ Peso</div><div class="card-body">O braço cai no arco por gravidade. Peso natural = som cheio. Pressão forçada = som fino e raspado.</div></div>
+    <div class="card"><div class="card-title">📍 Ponto de Contato</div><div class="card-body">Perto do cavalete = brilhante. Perto da escala = suave. O meio é o ponto de partida.</div></div>
+  </div>
+  <div class="sep"></div>
+  <div class="card-title" style="margin-bottom:0.6rem;">✅ Checklist de Aquecimento (5 min)</div>
+  <div class="card" id="bow-cl">
+    <div class="check-item" onclick="chk(this)"><div class="check-box">✓</div><div class="check-txt">Arco na corda Ré, no meio (entre cavalete e escala)</div></div>
+    <div class="check-item" onclick="chk(this)"><div class="check-box">✓</div><div class="check-txt">Puxar devagar, do talão à ponta, sem apertar</div></div>
+    <div class="check-item" onclick="chk(this)"><div class="check-box">✓</div><div class="check-txt">Som cheio e consistente do talão à ponta?</div></div>
+    <div class="check-item" onclick="chk(this)"><div class="check-box">✓</div><div class="check-txt">Arco paralelo ao cavalete (confirmar com espelho ou vídeo)</div></div>
+    <div class="check-item" onclick="chk(this)"><div class="check-box">✓</div><div class="check-txt">Cotovelo direito na altura da corda que estou tocando</div></div>
+    <div class="check-item" onclick="chk(this)"><div class="check-box">✓</div><div class="check-txt">Repetir nas 4 cordas: Dó, Sol, Ré, Lá — détaché e legato</div></div>
+    <div class="check-item" onclick="chk(this)"><div class="check-box">✓</div><div class="check-txt">Respiração solta? (tensão na respiração = tensão no arco)</div></div>
+    <div class="btn-row"><button class="btn btn-outline btn-sm" onclick="resetCL('bow-cl')">↺ Reiniciar</button><span id="bow-prog" style="font-family:var(--font-b);font-size:0.82rem;color:var(--ivory3);align-self:center;"></span></div>
+  </div>
+  <div class="tip"><strong>🪞 Use espelho ou grave 30 segundos:</strong> O ângulo do arco é a causa nº1 de som fraco. Fácil de ver, difícil de sentir.</div>
+</div>
+
+<!-- ═══ VIBRATO ═══ -->
+<div class="page" id="page-vibrato">
+  <div class="page-header"><div class="page-title"><em>Vibrato</em></div><div class="page-sub">Expressividade — a etapa final, após a base estar sólida</div></div>
+  <div class="tip" style="margin-bottom:1.25rem;"><strong>⚠️ Quando começar:</strong> Só introduza o vibrato quando você conseguir tirar som cheio e sua afinação estiver estável nas escalas. Vibrato em nota desafinada piora tudo.</div>
+  <div class="card"><div class="card-title">O que é vibrato?</div><div class="card-body">É a oscilação suave da altura da nota produzida pelo movimento da mão esquerda. No violoncelo usa-se principalmente o vibrato de braço — o movimento vem do antebraço, não do pulso.</div></div>
+  <div class="sep"></div>
+  <div style="font-family:var(--font-d);font-size:1rem;font-weight:600;color:var(--gold2);margin-bottom:0.75rem;">Exercícios Progressivos</div>
+  <div class="vib-step"><div class="vib-num">1</div><div class="vib-content"><div class="vib-title">Movimento sem arco</div><div class="vib-body">Coloque o 2º dedo (médio) na corda Ré, em Lá. Sem arco, role o dedo para frente e para trás sobre a corda. O movimento vem do antebraço inteiro — como "aceno de não" lento. 1 minuto por dia.</div></div></div>
+  <div class="vib-step"><div class="vib-num">2</div><div class="vib-content"><div class="vib-title">Solte o cotovelo</div><div class="vib-body">Verifique se o cotovelo esquerdo está livre. Tensão no cotovelo = vibrato travado. Deixe-o cair levemente, respire.</div></div></div>
+  <div class="vib-step"><div class="vib-num">3</div><div class="vib-content"><div class="vib-title">Adicionar o arco</div><div class="vib-body">Quando o movimento sem arco estiver fluido (após ~2 semanas), adicione o arco lentamente em notas longas. O vibrato vai aparecer naturalmente.</div></div></div>
+  <div class="vib-step"><div class="vib-num">4</div><div class="vib-content"><div class="vib-title">Aplicar em frases</div><div class="vib-body">Adicione o vibrato apenas em notas longas dentro dos estudos do Dotzauer. Não force — deixe emergir na música.</div></div></div>
+  <div class="sep"></div>
+  <div class="g2">
+    <div class="card"><div class="card-title">Vibrato travado</div><div class="card-body">Causa: tensão no pulso ou cotovelo.<br>Solução: Solte o cotovelo, respire fundo.</div></div>
+    <div class="card"><div class="card-title">Vibrato nervoso (rápido demais)</div><div class="card-body">Causa: movimento vindo só do pulso.<br>Solução: "Balançar de braço" — mais lento e amplo.</div></div>
+  </div>
+</div>
+
+<!-- ═══ ESTÚDIO COMPLETO ═══ -->
+<div class="page" id="page-studio">
+  <div class="page-header"><div class="page-title">Estúdio — <em>Afinador + Metrônomo + Escala</em></div><div class="page-sub">Tudo junto para a sessão de escalas</div></div>
+  <div class="studio-grid">
+    <!-- LEFT: Tuner + Scale -->
+    <div>
+      <div class="card">
+        <div class="card-title">🎯 Afinador ao Vivo</div>
+        <div class="tuner-wrap" style="padding:1.25rem;">
+          <div class="tuner-note" id="st-note">—</div>
+          <div class="tuner-cents-txt" id="st-cents">Ative o microfone</div>
+          <div class="needle-wrap"><div class="needle-line"></div><div class="needle-center"></div><div class="needle" id="st-needle"></div></div>
+          <div class="tuner-freq" id="st-freq">— Hz</div>
+        </div>
+        <button class="btn btn-gold" id="st-tuner-btn" onclick="stToggleTuner()">🎤 Ativar Microfone</button>
+      </div>
+      <div class="card">
+        <div class="card-title">🎼 Escala Selecionada</div>
+        <div class="field"><span class="field-label">Escala</span>
+          <select id="st-scale-sel" onchange="stUpdateScale()">
+            <option value="C-maior">Dó Maior</option><option value="G-maior">Sol Maior</option>
+            <option value="D-maior">Ré Maior</option><option value="A-maior">Lá Maior</option>
+            <option value="F-maior">Fá Maior</option><option value="A-menor">Lá Menor</option>
+            <option value="D-menor">Ré Menor</option><option value="E-menor">Mi Menor</option>
+          </select>
+        </div>
+        <div class="scale-notes-live" id="st-scale-notes"></div>
+        <div class="tip" style="margin-top:0.5rem;">Toque cada nota e verifique no afinador antes de passar para a próxima.</div>
+      </div>
+    </div>
+    <!-- RIGHT: Metronome -->
+    <div>
+      <div class="card">
+        <div class="card-title">⏱ Metrônomo</div>
+        <div class="metro-display">
+          <div class="metro-bpm" id="st-bpm-disp">60</div>
+          <div class="metro-unit">♩ = BPM</div>
+          <div class="metro-beats" id="st-beats">
+            <div class="beat-dot"></div><div class="beat-dot"></div>
+            <div class="beat-dot"></div><div class="beat-dot"></div>
+          </div>
+          <input class="bpm-range" type="range" min="30" max="160" value="60" id="st-bpm-range" oninput="stBPM(this.value)">
+          <div style="display:flex;justify-content:space-between;font-family:var(--font-t);font-size:0.72rem;color:var(--ivory3);padding:0 2px;"><span>30</span><span>60</span><span>90</span><span>120</span><span>160</span></div>
+        </div>
+        <div class="btn-row">
+          <button class="btn btn-gold" id="st-metro-btn" onclick="stToggleMetro()">▶ Iniciar</button>
+          <button class="btn btn-outline btn-sm" onclick="stBPM(50)">♩=50</button>
+          <button class="btn btn-outline btn-sm" onclick="stBPM(60)">♩=60</button>
+          <button class="btn btn-outline btn-sm" onclick="stBPM(80)">♩=80</button>
+          <button class="btn btn-outline btn-sm" onclick="stBPM(100)">♩=100</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">📋 Rotina — 7 min de escalas</div>
+        <div class="card-body" style="line-height:2;">
+          <strong style="color:var(--gold2)">①</strong> Escolha a escala de acordo com sua fase<br>
+          <strong style="color:var(--gold2)">②</strong> Configure em ♩=50 (muito lento — está correto)<br>
+          <strong style="color:var(--gold2)">③</strong> Toque cada nota verificando no afinador<br>
+          <strong style="color:var(--gold2)">④</strong> Só avance quando som e afinação estiverem estáveis<br>
+          <strong style="color:var(--gold2)">⑤</strong> Ordem de dificuldade: Dó → Sol → Ré → Lá
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ AFINADOR ═══ -->
+<div class="page" id="page-afinador">
+  <div class="page-header"><div class="page-title">Afinador <em>Cromático</em></div><div class="page-sub">Eduque o ouvido com feedback em tempo real</div></div>
+  <div class="open-str-grid">
+    <div class="ostr" onclick="playToneHz(65.41,1.5)"><span class="n">Dó</span><span class="l">Corda C</span></div>
+    <div class="ostr" onclick="playToneHz(98.00,1.5)"><span class="n">Sol</span><span class="l">Corda G</span></div>
+    <div class="ostr" onclick="playToneHz(146.83,1.5)"><span class="n">Ré</span><span class="l">Corda D</span></div>
+    <div class="ostr" onclick="playToneHz(220.00,1.5)"><span class="n">Lá</span><span class="l">Corda A</span></div>
+  </div>
+  <div class="tuner-wrap">
+    <div class="tuner-note" id="tun-note">—</div>
+    <div class="tuner-cents-txt" id="tun-cents">Ative o microfone para começar</div>
+    <div class="needle-wrap"><div class="needle-line"></div><div class="needle-center"></div><div class="needle" id="tun-needle"></div></div>
+    <div class="tuner-freq" id="tun-freq">— Hz</div>
+  </div>
+  <div class="btn-row">
+    <button class="btn btn-gold" id="tun-btn" onclick="tunToggle()">🎤 Ativar Microfone</button>
+    <button class="btn btn-outline" onclick="showPage('studio')">🎼 Estúdio Completo →</button>
+  </div>
+  <div class="card" style="margin-top:1rem;">
+    <div class="card-title">Como ler o afinador</div>
+    <div class="card-body" style="line-height:2.2;">
+      <span style="color:var(--green2)">■</span> <strong style="color:var(--green2)">Centro = Afinado ✓</strong><br>
+      <span style="color:#D4829A">■</span> Agulha à direita = Nota alta — baixe o dedo<br>
+      <span style="color:var(--blue2)">■</span> Agulha à esquerda = Nota baixa — suba o dedo
+    </div>
+  </div>
+</div>
+
+<!-- ═══ GRAVAÇÃO ═══ -->
+<div class="page" id="page-gravacao">
+  <div class="page-header"><div class="page-title">Gravação & <em>Análise</em></div><div class="page-sub">Ouça-se com o ouvido de quem não está tocando</div></div>
+  <div class="rec-area">
+    <div style="margin-bottom:0.75rem;"><span class="rec-dot" id="rec-dot"></span><span id="rec-status" style="font-family:var(--font-b);color:var(--ivory3);">Pronto</span><span id="rec-timer" style="font-family:'Courier New',monospace;color:var(--gold);margin-left:1rem;font-size:0.9rem;"></span></div>
+    <canvas class="waveform" id="waveform"></canvas>
+    <div class="btn-row" style="justify-content:center;">
+      <button class="btn btn-red" id="rec-btn" onclick="toggleRec()">⏺ Gravar</button>
+      <button class="btn btn-outline" id="play-btn" onclick="playRec()" disabled>▶ Ouvir</button>
+      <button class="btn btn-outline" id="dl-btn" onclick="dlRec()" disabled>⬇ Baixar</button>
+    </div>
+  </div>
+  <div class="g2" style="margin-top:1rem;">
+    <div class="card"><div class="card-title">Sua Gravação</div><button class="btn btn-outline" style="width:100%;" id="play-mine" onclick="playRec()" disabled>▶ Ouvir Gravação</button></div>
+    <div class="card"><div class="card-title">Referência Afinada</div>
+      <div class="field"><select id="ref-sc"><option>Dó maior</option><option>Sol maior</option><option>Ré maior</option><option>Lá maior</option></select></div>
+      <button class="btn btn-outline" style="width:100%;" onclick="playRef()">▶ Ouvir Referência</button>
+    </div>
+  </div>
+  <div class="tip" style="margin-top:0.75rem;"><strong>Rotina:</strong> Grave uma vez por semana tocando a escala atual. Compare com a semana anterior — a evolução ficará evidente.</div>
+</div>
+
+<!-- ═══ EAR TRAINING ═══ -->
+<div class="page" id="page-eartraining">
+  <div class="page-header"><div class="page-title"><em>Ear Training</em></div><div class="page-sub">Treine o ouvido como se treina um músculo</div></div>
+  <div class="tabs" id="ear-tabs">
+    <button class="tab active" onclick="earTab(this,'et-int')">Intervalos</button>
+    <button class="tab" onclick="earTab(this,'et-mm')">Maior / Menor</button>
+    <button class="tab" onclick="earTab(this,'et-ton')">Tônica</button>
+    <button class="tab" onclick="earTab(this,'et-mel')">Ditado Melódico</button>
+    <button class="tab" onclick="earTab(this,'et-icm')">Louvores ICM</button>
+  </div>
+
+  <!-- INTERVALOS -->
+  <div class="tab-panel active" id="et-int">
+    <div class="card"><div class="card-title">🎵 Intervalos</div><div class="card-body">Ouça duas notas e identifique a distância. Comece com 2ª e 3ª — os mais comuns nos louvores.</div></div>
+    <div class="ear-exercise">
+      <div style="font-family:var(--font-b);color:var(--ivory3);font-style:italic;margin-bottom:1rem;">Ouça e escolha o intervalo</div>
+      <button class="play-circle" onclick="playInterval()">▶</button>
+      <div class="feedback-line" id="int-fb"></div>
+      <div class="ans-grid">
+        <button class="ans-btn" onclick="ansInt('2m')">2ª menor<br><small style="opacity:.6">1 semitom</small></button>
+        <button class="ans-btn" onclick="ansInt('2M')">2ª maior<br><small style="opacity:.6">1 tom</small></button>
+        <button class="ans-btn" onclick="ansInt('3m')">3ª menor<br><small style="opacity:.6">3 semitons</small></button>
+        <button class="ans-btn" onclick="ansInt('3M')">3ª maior<br><small style="opacity:.6">4 semitons</small></button>
+        <button class="ans-btn" onclick="ansInt('4')">4ª justa<br><small style="opacity:.6">5 semitons</small></button>
+        <button class="ans-btn" onclick="ansInt('5')">5ª justa<br><small style="opacity:.6">7 semitons</small></button>
+        <button class="ans-btn" onclick="ansInt('8')">Oitava<br><small style="opacity:.6">12 semitons</small></button>
+      </div>
+      <div class="score-row">
+        <div class="score-item"><span class="score-n c" id="int-c">0</span><div class="score-l">Corretas</div></div>
+        <div class="score-item"><span class="score-n w" id="int-w">0</span><div class="score-l">Erradas</div></div>
+        <div class="score-item"><span class="score-n s" id="int-s">0</span><div class="score-l">Seguidas</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIOR MENOR -->
+  <div class="tab-panel" id="et-mm">
+    <div class="ear-exercise">
+      <div style="font-family:var(--font-b);color:var(--ivory3);font-style:italic;margin-bottom:1rem;">Ouça a escala — maior ou menor?</div>
+      <button class="play-circle" onclick="playMM2()">▶</button>
+      <div class="feedback-line" id="mm2-fb"></div>
+      <div class="ans-grid" style="max-width:260px;">
+        <button class="ans-btn" onclick="ansMM2('maior')">☀️ Maior</button>
+        <button class="ans-btn" onclick="ansMM2('menor')">🌙 Menor</button>
+      </div>
+      <div class="btn-row" style="justify-content:center;margin-top:0.75rem;">
+        <button class="btn btn-outline" onclick="playMM2()">🔁 Repetir</button>
+        <button class="btn btn-gold" onclick="ansMM2('_skip')">▶ Próximo</button>
+      </div>
+      <div class="score-row">
+        <div class="score-item"><span class="score-n c" id="mm2-c">0</span><div class="score-l">Corretas</div></div>
+        <div class="score-item"><span class="score-n w" id="mm2-w">0</span><div class="score-l">Erradas</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TÔNICA -->
+  <div class="tab-panel" id="et-ton">
+    <div class="card"><div class="card-title">🏠 Identifique a Tônica</div><div class="card-body">Ouça a progressão harmônica e identifique qual nota é a nota "casa". Simula o processo de tocar de ouvido.</div></div>
+    <div class="ear-exercise">
+      <button class="play-circle" onclick="playTon()">▶</button>
+      <div class="feedback-line" id="ton-fb"></div>
+      <div class="ans-grid" id="ton-opts" style="max-width:420px;"></div>
+      <div class="btn-row" style="justify-content:center;margin-top:0.75rem;">
+        <button class="btn btn-outline" onclick="playTon()">🔁 Repetir</button>
+        <button class="btn btn-gold" onclick="ansTon('_skip')">▶ Próximo</button>
+      </div>
+      <div class="score-row">
+        <div class="score-item"><span class="score-n c" id="ton-c">0</span><div class="score-l">Corretas</div></div>
+        <div class="score-item"><span class="score-n w" id="ton-w">0</span><div class="score-l">Erradas</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DITADO MELÓDICO -->
+  <div class="tab-panel" id="et-mel">
+    <div class="card"><div class="card-title">🎶 Ditado Melódico</div><div class="card-body">Ouça a frase e reproduza clicando nas notas. Começamos com 3 notas e evoluímos progressivamente.</div></div>
+    <div class="ear-exercise">
+      <button class="play-circle" onclick="playMelody()">▶</button>
+      <div class="melody-boxes" id="mel-boxes"></div>
+      <div class="ans-grid" id="mel-opts" style="max-width:380px;"></div>
+      <div class="feedback-line" id="mel-fb"></div>
+      <button class="btn btn-outline btn-sm" style="margin-top:0.5rem;" onclick="newMelody()">↺ Nova frase</button>
+    </div>
+  </div>
+
+  <!-- LOUVORES ICM -->
+  <div class="tab-panel" id="et-icm">
+    <div class="card"><div class="card-title">🎻 Louvores ICM — do mais fácil ao mais difícil</div><div class="card-body">Use esses louvores nos 5 min finais da sessão. Tente encontrar a tônica no violoncelo e pescar a melodia.</div></div>
+    <div class="louvor-list">
+      <div style="font-family:var(--font-d);font-size:0.7rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--green2);margin:0.5rem 0 0.25rem;">🟢 Nível 1 — Comece aqui</div>
+      <div class="louvor-item"><div class="louvor-lv lv1">1</div><div><div class="louvor-name">Como Não Entoar Meu Louvor</div><div class="louvor-hint">Melodia ascendente clara · Tonalidade maior · Ideal para encontrar a tônica</div></div><button class="btn btn-outline btn-sm louvor-btn" onclick="playScaleAudio('C','maior')">▶ Escala</button></div>
+      <div class="louvor-item"><div class="louvor-lv lv1">1</div><div><div class="louvor-name">Meu Deus Vence a Batalha</div><div class="louvor-hint">Refrão com poucos saltos · Fácil de pescar</div></div><button class="btn btn-outline btn-sm louvor-btn" onclick="playScaleAudio('G','maior')">▶ Escala</button></div>
+      <div class="louvor-item"><div class="louvor-lv lv1">1</div><div><div class="louvor-name">Venho Senhor Minha Vida Oferecer</div><div class="louvor-hint">Movimento por grau conjunto · Ideal para iniciantes</div></div><button class="btn btn-outline btn-sm louvor-btn" onclick="playScaleAudio('D','maior')">▶ Escala</button></div>
+      <div class="louvor-item"><div class="louvor-lv lv1">1</div><div><div class="louvor-name">Jesus Nome Precioso</div><div class="louvor-hint">Frases curtas e repetitivas · Ótimo para memória auditiva</div></div><button class="btn btn-outline btn-sm louvor-btn" onclick="playScaleAudio('C','maior')">▶ Escala</button></div>
+
+      <div style="font-family:var(--font-d);font-size:0.7rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--gold2);margin:0.75rem 0 0.25rem;">🟡 Nível 2 — Fase 2</div>
+      <div class="louvor-item"><div class="louvor-lv lv2">2</div><div><div class="louvor-name">Encontrei o Grande Amor</div><div class="louvor-hint">Melodia mais variada · Saltos maiores</div></div><button class="btn btn-outline btn-sm louvor-btn" onclick="playScaleAudio('G','maior')">▶ Escala</button></div>
+      <div class="louvor-item"><div class="louvor-lv lv2">2</div><div><div class="louvor-name">Ah Meu Senhor</div><div class="louvor-hint">Ritmo mais variado · Exige atenção ao pulso</div></div><button class="btn btn-outline btn-sm louvor-btn" onclick="playScaleAudio('D','maior')">▶ Escala</button></div>
+      <div class="louvor-item"><div class="louvor-lv lv2">2</div><div><div class="louvor-name">Nesta Hora de Clamor</div><div class="louvor-hint">Alterna maior e menor · Bom para treinar reconhecimento de clima</div></div><button class="btn btn-outline btn-sm louvor-btn" onclick="playScaleAudio('A','menor')">▶ Escala</button></div>
+      <div class="louvor-item"><div class="louvor-lv lv2">2</div><div><div class="louvor-name">O Pastor de Israel</div><div class="louvor-hint">Melodia ornamentada · Bom desafio para a Fase 2</div></div><button class="btn btn-outline btn-sm louvor-btn" onclick="playScaleAudio('A','menor')">▶ Escala</button></div>
+
+      <div style="font-family:var(--font-d);font-size:0.7rem;letter-spacing:0.22em;text-transform:uppercase;color:#D4829A;margin:0.75rem 0 0.25rem;">🔴 Nível 3 — Fase 3</div>
+      <div class="louvor-item"><div class="louvor-lv lv3">3</div><div><div class="louvor-name">Jesus Em Tua Presença</div><div class="louvor-hint">Movimentos melódicos amplos</div></div><button class="btn btn-outline btn-sm louvor-btn" onclick="playScaleAudio('G','maior')">▶ Escala</button></div>
+      <div class="louvor-item"><div class="louvor-lv lv3">3</div><div><div class="louvor-name">Perfeito Amor</div><div class="louvor-hint">Harmonia rica · Bom teste de ouvido avançado</div></div><button class="btn btn-outline btn-sm louvor-btn" onclick="playScaleAudio('D','maior')">▶ Escala</button></div>
+      <div class="louvor-item"><div class="louvor-lv lv3">3</div><div><div class="louvor-name">Quando Buscamos</div><div class="louvor-hint">Frases longas · Exige memória auditiva desenvolvida</div></div><button class="btn btn-outline btn-sm louvor-btn" onclick="playScaleAudio('C','maior')">▶ Escala</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ DOTZAUER ═══ -->
+<div class="page" id="page-dotzauer">
+  <div class="page-header"><div class="page-title">Método <em>Dotzauer</em></div><div class="page-sub">113 estudos — partituras em domínio público via IMSLP</div></div>
+
+  <div class="dotz-header">
+    <div>
+      <div style="font-family:var(--font-b);font-size:0.68rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--ivory3);">Estudo Atual</div>
+      <div class="dotz-current-num" id="dtz-num">1</div>
+      <div class="dotz-current-name" id="dtz-name">Legato em cordas graves</div>
+      <div class="dotz-current-focus" id="dtz-focus">Arco legato, notas longas. Atenção ao som cheio do talão à ponta.</div>
+      <div class="prog-wrap" style="margin-top:0.5rem;width:200px;"><div class="prog-fill" id="dtz-prog" style="width:1%"></div></div>
+      <div style="font-family:var(--font-b);font-size:0.75rem;color:var(--ivory3);margin-top:0.2rem;" id="dtz-pct">Estudo 1 de 113</div>
+    </div>
+    <div class="btn-row" style="align-items:flex-start;">
+      <button class="btn btn-gold" onclick="markDtzdone()">✓ Concluído</button>
+      <button class="btn btn-outline" onclick="showPage('studio')">🎯 Estúdio</button>
+    </div>
+  </div>
+
+  <!-- PARTITURA VIEWER -->
+  <div class="card" style="padding:0.75rem;">
+    <div class="card-title">📄 Partitura — Dotzauer 113 Estudos (Domínio Público · IMSLP)</div>
+    <div class="score-viewer">
+      <div class="score-toolbar">
+        <span class="score-toolbar-title" id="score-title">Livro I — Estudos 1–34</span>
+        <button class="btn btn-outline btn-sm" onclick="switchBook(1)">Livro I (1–34)</button>
+        <button class="btn btn-outline btn-sm" onclick="switchBook(2)">Livro II (35–62)</button>
+        <button class="btn btn-outline btn-sm" onclick="switchBook(3)">Livro III (63–85)</button>
+        <button class="btn btn-outline btn-sm" onclick="switchBook(4)">Livro IV (86–113)</button>
+        <a id="imslp-link" href="https://imslp.org/wiki/113_Etudes_for_Cello_(Dotzauer,_Friedrich)" target="_blank" class="btn btn-outline btn-sm">↗ IMSLP</a>
+      </div>
+      <div class="score-iframe-wrap" id="score-frame-wrap">
+        <iframe id="score-pdf-frame" src="" style="width:100%;height:100%;border:none;background:#fff;display:none;"></iframe>
+        <div class="score-no-embed">
+          <div style="font-size:2.5rem;">📜</div>
+          <div style="font-family:var(--font-d);font-size:1.1rem;color:var(--gold2);">Partituras Dotzauer — Domínio Público</div>
+          <div class="imslp-note">
+            As partituras dos 113 estudos estão disponíveis gratuitamente no IMSLP.<br>
+            Clique no botão abaixo para abrir diretamente o PDF do livro selecionado.<br><br>
+            <strong style="color:var(--gold2)">Livro I (Estudos 1–34):</strong> Primeira posição — foco desta fase<br>
+            <strong style="color:var(--ivory2)">Livro II (35–62):</strong> Posições 2ª a 5ª<br>
+            <strong style="color:var(--ivory3)">Livro III (63–85):</strong> Demais posições<br>
+            <strong style="color:var(--ivory3)">Livro IV (86–113):</strong> Posições avançadas
+          </div>
+          <div class="btn-row" style="justify-content:center;flex-wrap:wrap;">
+            <a href="https://imslp.org/wiki/113_Etudes_for_Cello_(Dotzauer,_Friedrich)" target="_blank" class="btn btn-gold">↗ Abrir Partituras no IMSLP</a>
+            <a href="https://musopen.org/music/16116-113-etudes-for-cello/" target="_blank" class="btn btn-outline">↗ Musopen (áudio + PDF)</a>
+          </div>
+          <div style="font-family:var(--font-t);font-size:0.78rem;color:var(--ivory3);margin-top:0.75rem;font-style:italic;">
+            Salve o PDF no seu dispositivo para acesso offline durante as sessões de estudo.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="g2" style="margin-top:0;">
+    <div class="card">
+      <div class="card-title">📋 Rotina — 13 min</div>
+      <div id="dtz-cl">
+        <div class="check-item" onclick="chk(this)"><div class="check-box">✓</div><div class="check-txt">Leia as primeiras 4 barras com os olhos</div></div>
+        <div class="check-item" onclick="chk(this)"><div class="check-box">✓</div><div class="check-txt">Bata palmas no ritmo antes de tocar</div></div>
+        <div class="check-item" onclick="chk(this)"><div class="check-box">✓</div><div class="check-txt">Toque as primeiras 4 barras em ♩=50</div></div>
+        <div class="check-item" onclick="chk(this)"><div class="check-box">✓</div><div class="check-txt">Marque com lápis os trechos que travaram</div></div>
+        <div class="check-item" onclick="chk(this)"><div class="check-box">✓</div><div class="check-txt">Adicione mais 4 barras e repita</div></div>
+        <div class="check-item" onclick="chk(this)"><div class="check-box">✓</div><div class="check-txt">Toque o estudo inteiro sem parar</div></div>
+      </div>
+      <button class="btn btn-outline btn-sm" style="margin-top:0.6rem;" onclick="resetCL('dtz-cl')">↺ Reiniciar</button>
+    </div>
+    <div class="card">
+      <div class="card-title">✅ Critério de Avanço</div>
+      <div class="card-body" style="line-height:1.9;">
+        ✓ Tocar do início ao fim sem parar<br>
+        ✓ Som cheio na maior parte do estudo<br>
+        ✓ Afinação razoável (sem notas claramente erradas)<br>
+        ✓ Sem cifra nem anotações extras
+      </div>
+    </div>
+  </div>
+
+  <div class="sep"></div>
+  <div style="font-family:var(--font-d);font-size:0.7rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--ivory3);margin-bottom:0.6rem;">Lista de Estudos — Fase 1</div>
+  <div class="study-list" id="study-list"></div>
+</div>
+
+<!-- ═══ PROGRESSO ═══ -->
+<div class="page" id="page-progresso">
+  <div class="page-header"><div class="page-title">Progresso & <em>Troféus</em></div><div class="page-sub">Cada nota bem afinada é uma vitória</div></div>
+  <div class="g3" style="margin-bottom:1.25rem;">
+    <div class="card" style="text-align:center;"><span class="stat-n" style="font-size:2.5rem;" id="pg-d">0</span><div class="stat-l" style="display:block;margin-top:0.3rem;">Dias Praticados</div></div>
+    <div class="card" style="text-align:center;"><span class="stat-n" style="font-size:2.5rem;" id="pg-e">0</span><div class="stat-l" style="display:block;margin-top:0.3rem;">Exercícios Ear Training</div></div>
+    <div class="card" style="text-align:center;"><span class="stat-n" style="font-size:2.5rem;" id="pg-s">0</span><div class="stat-l" style="display:block;margin-top:0.3rem;">Sequência (dias)</div></div>
+  </div>
+  <div style="font-family:var(--font-d);font-size:0.7rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--ivory3);margin-bottom:0.6rem;">🏆 Conquistas</div>
+  <div class="trophy-grid" id="trophy-grid"></div>
+  <div class="sep"></div>
+  <div style="font-family:var(--font-d);font-size:0.7rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--ivory3);margin-bottom:0.6rem;">📅 Registro de Sessões</div>
+  <div class="session-log" id="session-log"></div>
+  <button class="btn btn-gold" style="margin-top:0.75rem;" onclick="logDay()">✓ Registrar Sessão de Hoje</button>
+</div>
+
+
+<!-- ═══ LEITURA DE PARTITURAS ═══ -->
+<div class="page" id="page-leitor">
+  <div class="page-header">
+    <div class="page-title">Leitura de <em>Partituras</em></div>
+    <div class="page-sub">Envie uma foto ou PDF — o app identifica as notas e toca o áudio</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Como funciona</div>
+    <div class="card-body">
+      Faça upload de uma foto da partitura (câmera do celular) ou de um PDF. A inteligência artificial lê as notas na clave de fá, identifica a melodia principal e a toca para você. Ideal para praticar antes de pegar o violoncelo.
+    </div>
+  </div>
+
+  <!-- Upload area -->
+  <div class="score-reader-drop" id="reader-drop" onclick="document.getElementById('reader-file').click()" ondragover="readerDrag(event,true)" ondragleave="readerDrag(event,false)" ondrop="readerDrop(event)">
+    <span class="dr-icon">📷</span>
+    <div class="dr-txt">Toque para tirar foto ou escolher arquivo</div>
+    <div style="font-family:var(--font-t);font-size:0.8rem;color:var(--ivory3);margin-top:0.3rem;">JPG · PNG · PDF · HEIC</div>
+    <input type="file" id="reader-file" accept="image/*,application/pdf" style="display:none" capture="environment" onchange="readerFileChosen(this)">
+  </div>
+
+  <img id="reader-preview" class="reader-preview" style="display:none">
+  <div class="reader-status" id="reader-status" style="display:none"></div>
+
+  <!-- Controls -->
+  <div id="reader-controls" style="display:none">
+    <div class="card">
+      <div class="card-title" id="reader-result-title">Notas identificadas</div>
+      <div class="parsed-notes-row" id="parsed-notes"></div>
+      <div style="font-family:var(--font-t);font-size:0.82rem;color:var(--ivory3);font-style:italic;" id="reader-raw-text"></div>
+    </div>
+    <div class="speed-control">
+      <span class="speed-label">Velocidade de reprodução</span>
+      <button class="speed-btn active" onclick="setScaleSpeed(0.4,this)">🐢 Muito lento</button>
+      <button class="speed-btn" onclick="setScaleSpeed(0.7,this)">🐢 Lento</button>
+      <button class="speed-btn" onclick="setScaleSpeed(1.0,this)">▶ Normal</button>
+      <button class="speed-btn" onclick="setScaleSpeed(1.5,this)">🐇 Rápido</button>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-gold" id="play-score-btn" onclick="playParsedScore()">▶ Tocar Partitura</button>
+      <button class="btn btn-outline" id="stop-score-btn" onclick="stopParsedScore()">⏹ Parar</button>
+      <button class="btn btn-outline" onclick="document.getElementById('reader-file').click()">📷 Nova foto</button>
+    </div>
+  </div>
+
+  <div class="tip" style="margin-top:1rem;">
+    <strong>Dica para melhores resultados:</strong> Fotografe com boa iluminação, partitura plana, câmera paralela ao papel. Funciona melhor com partituras impressas em clave de fá.
+  </div>
+</div>
+
+</main>
+</div>
+
+<script src="./app.js"></script>
+</body>
+</html>
